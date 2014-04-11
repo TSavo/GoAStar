@@ -1,5 +1,5 @@
-//pathfinding package implements pathfinding algorithms such as Dijkstra and A*
-package goastar
+//astar package implements the A* pathfinding algorithm
+package astar
 
 import (
 	"fmt"

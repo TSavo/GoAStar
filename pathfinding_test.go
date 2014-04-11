@@ -1,4 +1,4 @@
-package goastar
+package astar
 
 import (
 	"fmt"
