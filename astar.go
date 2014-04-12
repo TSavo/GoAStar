@@ -226,7 +226,7 @@ func Astar(graph *Graph, start, stop *Node) []*Node {
 		//Get the node with the min H
 		current := minH(openSet)
 		if current.parent != nil {
-			current.cost = current.parent.cost + 1 + Distance(current, current.parent)
+			current.cost = current.parent.cost + Distance(current, current.parent)
 		}
 		if current == stop {
 			return retracePath(graph, current)
