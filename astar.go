@@ -9,8 +9,9 @@ import (
 //Defining possible graph elements
 const (
 	UNKNOWN int = iota - 1
-	LAND
+	ROAD
 	WALL
+	CAR
 	START
 	STOP
 )
@@ -85,7 +86,7 @@ func (self *Graph) Node(x, y int) *Node {
 		}
 	}
 	map_data := *self.data
-	if map_data[x][y] == LAND || map_data[x][y] == STOP {
+	if map_data[x][y] == ROAD || map_data[x][y] == CAR || map_data[x][y] == STOP {
 		//Create a new node and add it to the graph
 		n := NewNode(x, y)
 		self.nodes = append(self.nodes, n)

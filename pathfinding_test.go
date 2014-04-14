@@ -51,11 +51,10 @@ const MAP3 = `############################
 .....#......#...###...#.....
 .....#......#....#....####..
 .....#....#.#.#..#....#.....
-.....#....#.#.#..#..........
+..####....#.#.#..#..........
 .....#....#.#.#..#....#.....
 ..........#...#..#....#.....
 ..........#...#.......#.....`
-
 
 func read_map(map_str string) (data *MapData, start []int, stop []int) {
 	rows := strings.Split(map_str, "\n")
@@ -71,7 +70,7 @@ func read_map(map_str string) (data *MapData, start []int, stop []int) {
 			char := rows[i][j]
 			switch char {
 			case '.':
-				result[i][j] = LAND
+				result[i][j] = ROAD
 			case '#':
 				result[i][j] = WALL
 			case 's':
@@ -91,23 +90,27 @@ func str_map(data *MapData, nodes []*Node) string {
 	for i, row := range *data {
 		for j, cell := range row {
 			added := false
-			for _, node := range nodes {
-				if node.x == i && node.y == j {
-					result += "+"
-					added = true
-					break
+			if len(nodes) > 2 {
+				for _, node := range nodes[1 : len(nodes)-1] {
+					if node.x == i && node.y == j {
+						result += "+"
+						added = true
+						break
+					}
 				}
 			}
 			if !added {
 				switch cell {
-				case LAND:
+				case ROAD:
 					result += "."
 				case WALL:
 					result += "#"
 				case START:
-					result += "s"
+					result += "M"
 				case STOP:
-					result += "e"
+					result += "D"
+				case CAR:
+					result += "C"
 				default: //Unknown
 					result += "?"
 				}
@@ -120,9 +123,8 @@ func str_map(data *MapData, nodes []*Node) string {
 
 //Generate a random MapData given some dimensions
 func generate_map(n int) *MapData {
-	
+
 	map_data := *NewMapData(n, n)
-	
 
 	for i := 0; i < len(map_data); i++ {
 		for j := 0; j < len(map_data[0]); j++ {
@@ -137,9 +139,9 @@ func generate_map(n int) *MapData {
 }
 
 func TestAstar0(t *testing.T) {
-	map_data, start, stop := read_map(MAP0)  //Read map data and create the map_data
-	graph := NewGraph(map_data) //Create a new graph
-	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1]))  //Get the shortest path
+	map_data, start, stop := read_map(MAP0)                                                  //Read map data and create the map_data
+	graph := NewGraph(map_data)                                                              //Create a new graph
+	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1])) //Get the shortest path
 	fmt.Println(str_map(map_data, nodes_path))
 	if len(nodes_path) != 5 {
 		t.Errorf("Expected 5. Got %d", len(nodes_path))
@@ -147,9 +149,9 @@ func TestAstar0(t *testing.T) {
 }
 
 func TestAstar1(t *testing.T) {
-	map_data, start, stop := read_map(MAP1)  //Read map data and create the map_data
-	graph := NewGraph(map_data) //Create a new graph
-	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1]))  //Get the shortest path
+	map_data, start, stop := read_map(MAP1)                                                  //Read map data and create the map_data
+	graph := NewGraph(map_data)                                                              //Create a new graph
+	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1])) //Get the shortest path
 	fmt.Println(str_map(map_data, nodes_path))
 	if len(nodes_path) != 17 {
 		t.Errorf("Expected 17. Got %d", len(nodes_path))
@@ -157,9 +159,9 @@ func TestAstar1(t *testing.T) {
 }
 
 func TestAstar2(t *testing.T) {
-	map_data, start, stop := read_map(MAP2)  //Read map data and create the map_data
-	graph := NewGraph(map_data) //Create a new graph
-	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1]))  //Get the shortest path
+	map_data, start, stop := read_map(MAP2)                                                  //Read map data and create the map_data
+	graph := NewGraph(map_data)                                                              //Create a new graph
+	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1])) //Get the shortest path
 	fmt.Println(str_map(map_data, nodes_path))
 	if len(nodes_path) != 0 {
 		t.Errorf("Expected 0. Got %d", len(nodes_path))
@@ -167,9 +169,9 @@ func TestAstar2(t *testing.T) {
 }
 
 func TestAstar3(t *testing.T) {
-	map_data, start, stop := read_map(MAP3)  //Read map data and create the map_data
-	graph := NewGraph(map_data) //Create a new graph
-	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1]))  //Get the shortest path
+	map_data, start, stop := read_map(MAP3)                                                  //Read map data and create the map_data
+	graph := NewGraph(map_data)                                                              //Create a new graph
+	nodes_path := Astar(graph, graph.Node(start[0], start[1]), graph.Node(stop[0], stop[1])) //Get the shortest path
 	fmt.Println(str_map(map_data, nodes_path))
 	if len(nodes_path) != 31 {
 		//t.Errorf("Expected 31. Got %d", len(nodes_path))
